@@ -14,10 +14,8 @@ app.get('/getPrograms', async() => {
 })
 
 app.post('/setProgram', async (req, res) => {
-    console.log('AQUIII')
     const programData = req.body;
     const id = req.body.id;
-    console.log(id)
     const data = {
       title: programData.title,
       description: programData.description || '', // definir valor padrão vazio caso seja opcional
@@ -27,10 +25,8 @@ app.post('/setProgram', async (req, res) => {
     };
   
     if (!id) {
-      console.log('create')
       await prisma.programs.create({ data });
     } else {
-      console.log('update')
       const program = await prisma.programs.findUnique({
         where: { id },
       });
@@ -46,6 +42,14 @@ app.post('/setProgram', async (req, res) => {
     }
     res.send({ status: true });
   });
+
+  app.delete('/excluiPrograma', async (req, res) => {
+    const id = req.body.id;
+    await prisma.programs.delete({
+        where: { id: id }
+    });
+    res.send({ status: true });
+});
 
 app.listen({
     port: 3333
